@@ -1,0 +1,18 @@
+# 1、安装mercurial SCM
+sudo pip3 install mercurial
+
+# 2、关闭go mod
+
+# 这两种关闭go mod方式都不行
+set GO111MODULE=off
+go env -w GO111MODULE=off
+
+# 需要这样，临时关闭。可以在.base_profile中永久关闭
+export GO111MODULE=off
+
+# 3、查看go环境变量
+go env
+
+# 4、把当前项目加入到GOPATH
+export GOPATH=$GOPATH:$pwd/src
+
