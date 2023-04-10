@@ -1,3 +1,7 @@
+参考资料1: https://www.cnblogs.com/taoxiaoyao/p/12666461.html
+参考资料2: https://blog.csdn.net/hjxisking/article/details/128574824
+参考资料3: https://www.qycn.com/xzx/article/10554.html
+
 # 1、安装mercurial SCM
 sudo pip3 install mercurial
 
@@ -14,5 +18,44 @@ export GO111MODULE=off
 go env
 
 # 4、把当前项目加入到GOPATH
-export GOPATH=$GOPATH:$pwd/src
+export GOPATH=$GOPATH:$pwd
 
+
+# 5、.base_profle 把GOBIN加入到PATH
+export PATH=$PATH:$GOPATH/bin
+
+# 6、安装模块
+go get -u github.com/go-bindata/go-bindata/...
+
+# 7、编译
+
+## 直接编译server + client
+sudo make
+
+## 单独编译server
+sudo make server
+
+## 单独编译client
+sudo make client
+
+## 8、设置环境变量GOOS、GOARCH。可以在.base_profile设置、或者GoLand里面
+由于您的二进制文件将针对 OSX，您需要设置GOOS为darwin，因此您的命令将是
+
+env GOOS=darwin GOARCH=amd64 go build
+
+## 9、若要直接在GoLand中运行
+1、server端启动参数：-tlsKey=scripts/server.key -tlsCrt=scripts/server.crt -domain=asgc.fun -httpAddr=:80 -httpsAddr=:443
+2、client端启动参数：-config=scripts/ngrok.cfg -log=scripts/ngrok.log start http https
+3、勾选Run with sodu
+4、Run kind选择File
+5、assert_debug 去掉以下
+//go:build debug
+// +build debug
+
+## 10、在GoLand中debug
+1、git clone https://github.com/go-delve/delve
+2、拷贝delve代码到 ～/go/src/github.com/go-delve/delve 下面
+3、安装dlv: go install github.com/go-delve/delve/cmd/dlv
+4、查看版本：dlv version
+5、调试运行server：dlv ngrokd.go
+6、调试运行client: dlv ngrok.go
